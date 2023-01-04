@@ -1,0 +1,1453 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <title>List of customers</title>
+    <th:block th:replace="layout/head"/>
+</head>
+
+<body>
+<div class="main-container">
+    <header>
+        <div class="row">
+            <div class="col-sm-5">
+                <h1>List of customers</h1>
+            </div>
+            <div class="col-sm-7">
+                <button id="btnShowCreateModal" class="btn btn-outline-light">
+                    <i class="fas fa-plus"></i>
+                    <span>Add New Customer</span>
+                </button>
+                <a href="/transfers" class="btn btn-outline-light">
+                    <i class="fas fa-history"></i>
+                    <span>Transfer money Information</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <div class="content">
+        <input type="hidden" id="currentRow" />
+        <table id="tbCustomer" class="table table-hover">
+            <thead>
+            <tr>
+                <th></th>
+                <th>#</th>
+                <th>FullName</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Balance</th>
+                <th>Province</th>
+                <th>District</th>
+                <th>Ward</th>
+                <th>Address</th>
+            </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+
+<div id="footer" class="footer"></div>
+
+<div class="modal fade" id="modalCreate" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5">Modal create</h1>
+                <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"
+                ></button>
+            </div>
+            <div class="modal-body">
+                <form id="frmCreate" method="post">
+                    <div class="row col-lg-12 mt-3">
+                        <div class="col-lg-4">
+                            <label>Full Name</label>
+                            <input
+                                    type="text"
+                                    id="fullNameCre"
+                                    name="fullNameCre"
+                                    class="form-control"
+                            />
+                        </div>
+                        <div class="col-lg-4">
+                            <label>Email</label>
+                            <input
+                                    type="email"
+                                    id="emailCre"
+                                    name="emailCre"
+                                    class="form-control"
+                            />
+                        </div>
+                        <div class="col-lg-4">
+                            <label>Phone</label>
+                            <input
+                                    type="tel"
+                                    id="phoneCre"
+                                    name="phoneCre"
+                                    class="form-control"
+                            />
+                        </div>
+                    </div>
+                    <div class="row col-lg-12 mt-3">
+                        <div class="col-lg-3">
+                            <label>Province</label>
+                            <select
+                                    name="provinceIdCre"
+                                    id="provinceIdCre"
+                                    class="form-control"
+                            ></select>
+                        </div>
+                        <div class="col-lg-3">
+                            <label>District</label>
+                            <select
+                                    name="districtIdCre"
+                                    id="districtIdCre"
+                                    class="form-control"
+                            ></select>
+                        </div>
+                        <div class="col-lg-3">
+                            <label>Ward</label>
+                            <select
+                                    name="warIdCre"
+                                    id="wardIdCre"
+                                    class="form-control"
+                            ></select>
+                        </div>
+                        <div class="col-lg-3">
+                            <label>Address</label>
+                            <input
+                                    type="text"
+                                    id="addressCre"
+                                    name="addressCre"
+                                    class="form-control"
+                            />
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal"
+                >
+                    Close
+                </button>
+                <button type="button" id="btnCreate" class="btn btn-primary">
+                    <i class="fas fa-plus"></i>
+                    Create
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div
+        class="modal fade"
+        id="modalUpdate"
+        data-bs-backdrop="static"
+        data-bs-keyboard="false"
+        tabindex="-1"
+>
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5">Modal Update</h1>
+                <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"
+                ></button>
+            </div>
+            <div class="modal-body">
+                <form id="frmUpdate" method="post">
+                    <div class="row col-lg-12 mt-3">
+                        <div class="col-lg-4">
+                            <label>Full Name</label>
+                            <input
+                                    type="text"
+                                    id="fullNameUp"
+                                    name="fullNameUp"
+                                    class="form-control"
+                            />
+                        </div>
+                        <div class="col-lg-4">
+                            <label>Email</label>
+                            <input
+                                    type="email"
+                                    id="emailUp"
+                                    name="emailUp"
+                                    class="form-control"
+                            />
+                        </div>
+                        <div class="col-lg-4">
+                            <label>Phone</label>
+                            <input
+                                    type="tel"
+                                    id="phoneUp"
+                                    name="phoneUp"
+                                    class="form-control"
+                            />
+                        </div>
+                    </div>
+                    <div class="row col-lg-12 mt-3">
+                        <div class="col-lg-3">
+                            <label>Province</label>
+                            <select
+                                    name="provinceIdUp"
+                                    id="provinceIdUp"
+                                    class="form-control"
+                            ></select>
+                        </div>
+                        <div class="col-lg-3">
+                            <label>District</label>
+                            <select
+                                    name="districtIdUp"
+                                    id="districtIdUp"
+                                    class="form-control"
+                            ></select>
+                        </div>
+                        <div class="col-lg-3">
+                            <label>Ward</label>
+                            <select
+                                    name="warIdUp"
+                                    id="wardIdUp"
+                                    class="form-control"
+                            ></select>
+                        </div>
+                        <div class="col-lg-3">
+                            <label>Address</label>
+                            <input
+                                    type="text"
+                                    id="addressUp"
+                                    name="addressUp"
+                                    class="form-control"
+                            />
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal"
+                >
+                    Close
+                </button>
+                <button
+                        type="button"
+                        id="btnUpdate"
+                        class="btn btn-outline-secondary"
+                >
+                    <i class="fas fa-pencil-alt"></i>
+                    Update
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div
+        class="modal fade"
+        id="modalDeposit"
+        data-bs-backdrop="static"
+        data-bs-keyboard="false"
+        tabindex="-1"
+>
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5">Modal deposit</h1>
+                <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"
+                ></button>
+            </div>
+            <div class="modal-body">
+                <form id="frmDeposit" method="post">
+                    <div class="row col-lg-12 mt-3">
+                        <div class="col-lg-6">
+                            <label>Customer ID</label>
+                            <input
+                                    type="text"
+                                    id="customerIdDep"
+                                    name="customerIdDep"
+                                    class="form-control"
+                            />
+                        </div>
+                        <div class="col-lg-6">
+                            <label>Full Name</label>
+                            <input
+                                    type="text"
+                                    id="fullNameDep"
+                                    name="fullNameDep"
+                                    class="form-control"
+                            />
+                        </div>
+                    </div>
+                    <div class="row col-lg-12 mt-3">
+                        <div class="col-lg-6">
+                            <label>Current balance ($)</label>
+                            <input
+                                    type="text"
+                                    id="balanceDep"
+                                    name="balanceDep"
+                                    class="form-control"
+                            />
+                        </div>
+                        <div class="col-lg-6">
+                            <label>Transaction Amount ($)</label>
+                            <input
+                                    type="text"
+                                    id="transactionAmountDep"
+                                    name="transactionAmountDep"
+                                    class="form-control"
+                            />
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal"
+                >
+                    Close
+                </button>
+                <button
+                        type="button"
+                        id="btnDeposit"
+                        class="btn btn-outline-success"
+                >
+                    <i class="fas fa-plus"></i>
+                    Deposit
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div
+        class="modal fade"
+        id="modalWithdraw"
+        data-bs-backdrop="static"
+        data-bs-keyboard="false"
+        tabindex="-1"
+>
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5">Modal withdraw</h1>
+                <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"
+                ></button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-alert-danger hide"></div>
+                <form id="frmWithdraw" method="post">
+                    <div class="row col-lg-12 mt-3">
+                        <div class="col-lg-6">
+                            <label>Customer ID</label>
+                            <input
+                                    type="text"
+                                    id="customerIdWd"
+                                    name="customerIdWd"
+                                    class="form-control"
+                            />
+                        </div>
+                        <div class="col-lg-6">
+                            <label>Full Name</label>
+                            <input
+                                    type="text"
+                                    id="fullNameWd"
+                                    name="fullNameWd"
+                                    class="form-control"
+                            />
+                        </div>
+                    </div>
+                    <div class="row col-lg-12 mt-3">
+                        <div class="col-lg-6">
+                            <label>Current balance ($)</label>
+                            <input
+                                    type="text"
+                                    id="balanceWd"
+                                    name="balanceWd"
+                                    class="form-control"
+                            />
+                        </div>
+                        <div class="col-lg-6">
+                            <label>Transaction Amount ($)</label>
+                            <input
+                                    type="text"
+                                    id="transactionAmountWd"
+                                    name="transactionAmountWd"
+                                    class="form-control"
+                            />
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal"
+                >
+                    Close
+                </button>
+                <button
+                        type="button"
+                        id="btnWithdraw"
+                        class="btn btn-outline-warning"
+                >
+                    <i class="fas fa-minus"></i>
+                    Withdraw
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div
+        class="modal fade"
+        id="modalTransfer"
+        data-bs-backdrop="static"
+        data-bs-keyboard="false"
+        tabindex="-1"
+>
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5">Modal Transfer</h1>
+                <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"
+                ></button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-alert-danger hide"></div>
+                <form id="frmTransfer" method="post">
+                    <div class="row col-lg-12 mt-3">
+                        <div class="col-lg-3">
+                            <label>Sender ID</label>
+                            <input
+                                    type="text"
+                                    id="senderIdTrf"
+                                    name="senderIdTrf"
+                                    class="form-control"
+                            />
+                        </div>
+                        <div class="col-lg-3">
+                            <label>Full Name</label>
+                            <input
+                                    type="text"
+                                    id="fullNameTrf"
+                                    name="fullNameTrf"
+                                    class="form-control"
+                            />
+                        </div>
+                        <div class="col-lg-3">
+                            <label>Email</label>
+                            <input
+                                    type="email"
+                                    id="emailTrf"
+                                    name="emailTrf"
+                                    class="form-control"
+                            />
+                        </div>
+                        <div class="col-lg-3">
+                            <label>Balance</label>
+                            <input
+                                    type="text"
+                                    id="balanceTrf"
+                                    name="balanceTrf"
+                                    class="form-control"
+                            />
+                        </div>
+                    </div>
+                    <div class="row col-lg-12 mt-3">
+                        <div class="col-lg-3">
+                            <label>Recipient Name</label>
+                            <select
+                                    id="recipientIdTrf"
+                                    name="recipientIdTrf"
+                                    class="form-select"
+                            ></select>
+                        </div>
+                        <div class="col-lg-3">
+                            <label>Transfer Amount ($)</label>
+                            <input
+                                    type="text"
+                                    id="transferAmountTrf"
+                                    name="transferAmountTrf"
+                                    class="form-control"
+                            />
+                        </div>
+                        <div class="col-lg-3">
+                            <label>Fees (%)</label>
+                            <input
+                                    type="text"
+                                    name="feesTrf"
+                                    value="10"
+                                    class="form-control"
+                                    readonly
+                            />
+                        </div>
+                        <div class="col-lg-3">
+                            <label>Transaction Amount ($)</label>
+                            <input
+                                    type="text"
+                                    id="transactionAmountTrf"
+                                    name="transactionAmountTrf"
+                                    class="form-control"
+                                    readonly
+                            />
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal"
+                >
+                    Close
+                </button>
+                <button id="btnTransfer" class="btn btn-outline-primary">
+                    <i class="fas fa-exchange-alt"></i>
+                    <span>Transfer</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<th:block th:replace="layout/script"/>
+
+<script>
+    let page = {
+        urls: {
+            getAllCustomers: App.BASE_URL_CUSTOMER,
+            getCustomerById: App.BASE_URL_CUSTOMER,
+            getAllRecipients: App.BASE_URL_CUSTOMER + "/get-all-recipients-without-sender",
+            createCustomer: App.BASE_URL_CUSTOMER + "/create",
+            updateCustomer: App.BASE_URL_CUSTOMER + "/update",
+            deposit: App.BASE_URL_CUSTOMER + "/deposit",
+            withdraw: App.BASE_URL_CUSTOMER + "/withdraw",
+            transfer: App.BASE_URL_CUSTOMER + "/transfer",
+            delete: App.BASE_URL_CUSTOMER + "/delete/",
+        },
+        elements: {},
+        loadData: {},
+        commands: {},
+        dialogs: {
+            elements: {},
+            loadData: {},
+            commands: {},
+        },
+        initializeEventControl: {},
+    };
+
+    let locationRegion = new LocationRegion();
+    let customer = new Customer();
+    let sender = new Sender();
+    let recipient = new Recipient();
+    let deposit = new Deposit();
+    let withdraw = new Withdraw();
+    let transfer = new Transfer();
+
+    page.elements.footer = $("#footer");
+    page.elements.currentRow = $("#currentRow");
+
+    page.elements.tbCustomer = $("#tbCustomer tbody");
+    page.elements.modalCreate = $("#modalCreate");
+    page.elements.modalUpdate = $("#modalUpdate");
+    page.elements.modalDeposit = $("#modalDeposit");
+
+    page.dialogs.elements.frmCreate = $("#frmCreate");
+    page.dialogs.elements.fullNameCre = $("#fullNameCre");
+    page.dialogs.elements.emailCre = $("#emailCre");
+    page.dialogs.elements.phoneCre = $("#phoneCre");
+    page.dialogs.elements.provinceCre = $("#provinceIdCre");
+    page.dialogs.elements.districtCre = $("#districtIdCre");
+    page.dialogs.elements.wardCre = $("#wardIdCre");
+    page.dialogs.elements.addressCre = $("#addressCre");
+    page.dialogs.elements.btnCreate = $("#btnCreate");
+
+    page.dialogs.elements.frmUpdate = $("#frmUpdate");
+    page.dialogs.elements.fullNameUp = $("#fullNameUp");
+    page.dialogs.elements.emailUp = $("#emailUp");
+    page.dialogs.elements.phoneUp = $("#phoneUp");
+    page.dialogs.elements.provinceUp = $("#provinceIdUp");
+    page.dialogs.elements.districtUp = $("#districtIdUp");
+    page.dialogs.elements.wardUp = $("#wardIdUp");
+    page.dialogs.elements.addressUp = $("#addressUp");
+    page.dialogs.elements.btnUpdate = $("#btnUpdate");
+
+    page.dialogs.elements.modalWithdraw = $("#modalWithdraw");
+    page.dialogs.elements.frmWithdraw = $("#frmWithdraw");
+    page.dialogs.elements.customerIdWd = $("#customerIdWd");
+    page.dialogs.elements.fullNameWd = $("#fullNameWd");
+    page.dialogs.elements.balanceWd = $("#balanceWd");
+    page.dialogs.elements.transactionAmountWd = $("#transactionAmountWd");
+    page.dialogs.elements.btnWithdraw = $("#btnWithdraw");
+
+    page.dialogs.elements.modalTransfer = $("#modalTransfer");
+    page.dialogs.elements.frmTransfer = $("#frmTransfer");
+    page.dialogs.elements.senderIdTrf = $("#senderIdTrf");
+    page.dialogs.elements.fullNameTrf = $("#fullNameTrf");
+    page.dialogs.elements.emailTrf = $("#emailTrf");
+    page.dialogs.elements.balanceTrf = $("#balanceTrf");
+    page.dialogs.elements.transferAmountTrf = $("#transferAmountTrf");
+    page.dialogs.elements.transactionAmountTrf = $("#transactionAmountTrf");
+    page.dialogs.elements.btnTransfer = $("#btnTransfer");
+    page.dialogs.elements.recipientIdTrf = $("#recipientIdTrf");
+    page.dialogs.elements.modalTransferError = $(
+        "#modalTransfer .modal-body .modal-alert-danger"
+    );
+
+    page.commands.getAllCustomers = () => {
+        $.ajax({
+            headers: {
+                accept: "application/json",
+                "content-type": "application/json",
+            },
+            type: "GET",
+            url: page.urls.getAllCustomers,
+        })
+            .done((data) => {
+                data.map((item) => {
+                    customer = item;
+                    locationRegion = customer.locationRegion;
+                    page.elements.tbCustomer.prepend(
+                        App.renderRowCustomer(customer, locationRegion)
+                    );
+                });
+
+                page.commands.handleShowFooterButton();
+
+                page.commands.handleOpenModalUpdate();
+                page.commands.handleOpenModalDeposit();
+                page.commands.handleOpenModalWithdraw();
+                page.commands.handleOpenModalTransfer();
+                page.commands.handleDeleteCustomer();
+
+                page.commands.initTooltip();
+            })
+            .fail((jqXHR) => {
+                App.SweetAlert.showAlertError(App.AlertMessageVi.ERROR_500);
+            });
+    };
+
+    page.commands.getAllProvinces = () => {
+        return $.ajax({
+            headers: {
+                accept: "application/json",
+                "content-type": "application/json",
+            },
+            type: "GET",
+            url: "https://vapi.vnappmob.com/api/province/",
+        })
+            .done((data) => {
+                let results = data.results;
+
+                results.map((item) => {
+                    let str = `<option value="${item.province_id}">${item.province_name}</option>`;
+                    page.dialogs.elements.provinceCre.append(str);
+                    page.dialogs.elements.provinceUp.append(str);
+                });
+            })
+            .fail((xqXHR) => {
+                App.SweetAlert.showAlertError(
+                    "Không thể tải dữ liệu Tỉnh/Thành phố"
+                );
+            });
+    };
+
+    page.commands.getAllDistrictsByProvinceId = (provinceId) => {
+        return $.ajax({
+            headers: {
+                accept: "application/json",
+                "content-type": "application/json",
+            },
+            type: "GET",
+            url: "https://vapi.vnappmob.com/api/province/district/" + provinceId,
+        })
+            .done((data) => {
+                page.dialogs.elements.districtCre.empty();
+                page.dialogs.elements.districtUp.empty();
+
+                let results = data.results;
+
+                results.map((item) => {
+                    let str = `<option value="${item.district_id}">${item.district_name}</option>`;
+                    page.dialogs.elements.districtCre.append(str);
+                    page.dialogs.elements.districtUp.append(str);
+                });
+            })
+            .fail((xqXHR) => {
+                App.SweetAlert.showAlertError(
+                    "Không thể tải dữ liệu Thành phố/Quận/Huyện"
+                );
+            });
+    };
+
+    page.commands.getAllWardsByDistrictId = (districtId) => {
+        return $.ajax({
+            headers: {
+                accept: "application/json",
+                "content-type": "application/json",
+            },
+            type: "GET",
+            url: "https://vapi.vnappmob.com/api/province/ward/" + districtId,
+        })
+            .done((data) => {
+                page.dialogs.elements.wardCre.empty();
+                page.dialogs.elements.wardUp.empty();
+
+                let results = data.results;
+
+                results.map((item) => {
+                    let str = `<option value="${item.ward_id}">${item.ward_name}</option>`;
+                    page.dialogs.elements.wardCre.append(str);
+                    page.dialogs.elements.wardUp.append(str);
+                });
+            })
+            .fail((xqXHR) => {
+                App.SweetAlert.showAlertError(
+                    "Không thể tải dữ liệu Phường/Xã/Thị trấn"
+                );
+            });
+    };
+
+    page.commands.getCustomerById = (customerId) => {
+        return $.ajax({
+            headers: {
+                accept: "application/json",
+                "content-type": "application/json",
+            },
+            type: "GET",
+            url: page.urls.getCustomerById + "/" + customerId,
+        })
+            .done((data) => {
+                customer = data;
+            })
+            .fail((jqXHR) => {
+                console.log("jqXHR ======");
+                console.log(jqXHR);
+            });
+    };
+
+    page.commands.getAllRecipients = (senderId) => {
+        return $.ajax({
+            headers: {
+                accept: "application/json",
+                "content-type": "application/json",
+            },
+            type: "GET",
+            url: page.urls.getAllRecipients + "/" + senderId,
+        })
+            .done((data) => {
+                page.dialogs.elements.recipientIdTrf.empty();
+
+                data.map((item) => {
+                    let str = `<option value="${item.id}">(${item.id}) - ${item.fullName}</option>`;
+                    page.dialogs.elements.recipientIdTrf.append(str);
+                });
+            })
+            .fail((jqXHR) => {
+                console.log("getAllRecipients error ======");
+                console.log(jqXHR);
+            });
+    };
+
+    $("#btnShowCreateModal").on("click", () => {
+        $("#modalCreate").modal("show");
+    });
+
+    $("#btnCreate").on("click", () => {
+        $("#frmCreate").trigger("submit");
+    });
+
+    $("#btnUpdate").on("click", () => {
+        $("#frmUpdate").trigger("submit");
+    });
+
+    $("#btnDeposit").on("click", () => {
+        $("#frmDeposit").trigger("submit");
+    });
+
+    page.dialogs.elements.btnWithdraw.on("click", () => {
+        page.dialogs.elements.frmWithdraw.trigger("submit");
+    });
+
+    page.dialogs.elements.btnTransfer.on("click", () => {
+        page.dialogs.elements.frmTransfer.trigger("submit");
+    });
+
+    page.dialogs.elements.provinceCre.on("change", function () {
+        let provinceId = $(this).val();
+
+        page.commands.getAllDistrictsByProvinceId(provinceId).then(() => {
+            let districtId = page.dialogs.elements.districtCre.val();
+
+            page.commands.getAllWardsByDistrictId(districtId);
+        });
+    });
+
+    page.dialogs.elements.districtCre.on("change", function () {
+        let districtId = $(this).val();
+
+        page.commands.getAllWardsByDistrictId(districtId);
+    });
+
+    page.dialogs.elements.provinceUp.on("change", function () {
+        let provinceId = $(this).val();
+
+        page.commands.getAllDistrictsByProvinceId(provinceId).then(() => {
+            let districtId = page.dialogs.elements.districtUp.val();
+
+            page.commands.getAllWardsByDistrictId(districtId);
+        });
+    });
+
+    page.dialogs.elements.districtUp.on("change", function () {
+        let districtId = $(this).val();
+
+        page.commands.getAllWardsByDistrictId(districtId);
+    });
+
+    page.commands.handleOpenModalUpdate = () => {
+        page.elements.footer.find(".update").on("click", () => {
+            let customerId = page.elements.currentRow.val();
+
+            page.commands.getCustomerById(customerId).then(() => {
+                page.dialogs.elements.fullNameUp.val(customer.fullName);
+                page.dialogs.elements.emailUp.val(customer.email);
+                page.dialogs.elements.phoneUp.val(customer.phone);
+
+                page.dialogs.elements.provinceUp.val(customer.locationRegion.provinceId);
+                page.commands.getAllDistrictsByProvinceId(customer.locationRegion.provinceId).then(() => {
+                    page.dialogs.elements.districtUp.val(customer.locationRegion.districtId)
+                    page.commands.getAllWardsByDistrictId(customer.locationRegion.districtId).then(() => {
+                        page.dialogs.elements.wardUp.val(customer.locationRegion.wardId);
+                        page.dialogs.elements.addressUp.val(customer.locationRegion.address);
+                        page.elements.modalUpdate.modal("show");
+
+                    })
+
+                })
+            })
+                .catch(() => {
+                    console.log("get edit fail");
+                    App.SweetAlert.showAlertError(App.AlertMessageVi.ERROR_404);
+                });
+        });
+    }
+
+    page.commands.handleOpenModalDeposit = () => {
+        page.elements.footer.find(".deposit").on("click", function () {
+            let customerId = page.elements.currentRow.val();
+
+            // let customerId = $(this).data("id");
+
+            page.commands
+                .getCustomerById(customerId)
+                .then(() => {
+                    $("#customerIdDep").val(customer.id);
+                    $("#fullNameDep").val(customer.fullName);
+                    $("#balanceDep").val(customer.balance);
+
+                    $("#modalDeposit").modal("show");
+                })
+                .catch(() => {
+                    console.log("get deposit fail");
+                    App.SweetAlert.showAlertError(App.AlertMessageVi.ERROR_404);
+                });
+        });
+    };
+
+    page.commands.handleOpenModalWithdraw = () => {
+        page.elements.footer.find(".withdraw").on("click", function () {
+            let customerId = page.elements.currentRow.val();
+
+            page.commands
+                .getCustomerById(customerId)
+                .then(() => {
+                    page.dialogs.elements.customerIdWd.val(customer.id);
+                    page.dialogs.elements.fullNameWd.val(customer.fullName);
+                    page.dialogs.elements.balanceWd.val(customer.balance);
+
+                    page.dialogs.elements.modalWithdraw.modal("show");
+                })
+                .catch(() => {
+                    App.SweetAlert.showAlertError(App.AlertMessageVi.ERROR_404);
+                });
+        });
+    };
+
+    page.commands.handleOpenModalTransfer = () => {
+        page.elements.footer.find(".transfer").on("click", function () {
+            let senderId = page.elements.currentRow.val();
+
+            page.commands
+                .getCustomerById(senderId)
+                .then(() => {
+                    page.commands.getAllRecipients(senderId);
+                    page.dialogs.elements.senderIdTrf.val(customer.id);
+                    page.dialogs.elements.fullNameTrf.val(customer.fullName);
+                    page.dialogs.elements.emailTrf.val(customer.email);
+                    page.dialogs.elements.balanceTrf.val(customer.balance);
+
+                    page.dialogs.elements.modalTransfer.modal("show");
+                })
+                .catch(() => {
+                    App.SweetAlert.showAlertError(App.AlertMessageVi.ERROR_404);
+                });
+        });
+    };
+
+    page.commands.handleCloseModalWithdraw = () => {
+        page.dialogs.elements.modalWithdraw.on("hidden.bs.modal", () => {
+            page.dialogs.elements.frmWithdraw[0].reset();
+            page.dialogs.elements.frmWithdraw.validate().resetForm();
+        });
+    };
+
+    page.commands.handleCloseModalTransfer = () => {
+        page.dialogs.elements.modalTransfer.on("hidden.bs.modal", () => {
+            page.dialogs.elements.frmTransfer[0].reset();
+            page.dialogs.elements.frmTransfer.validate().resetForm();
+            page.dialogs.elements.modalTransferError
+                .removeClass("show")
+                .addClass("hide");
+        });
+    };
+
+    page.commands.handleDeleteCustomer = () => {
+        page.elements.footer.find(".deactivate").on("click", () => {
+            let customerId = page.elements.currentRow.val();
+
+            App.SweetAlert.showSuspendedConfirmDialog().then((result) => {
+                if (result.isConfirmed) {
+                    page.commands.suspendedCustomer(customerId);
+                }
+            });
+        });
+    };
+
+
+    page.commands.removeEventOpenModal = () => {
+        $(".deposit").off();
+        $(".withdraw").off();
+        $(".transfer").off();
+    };
+
+    page.commands.handleChangeTransferAmountTrf = () => {
+        page.dialogs.elements.transferAmountTrf.on("input", function () {
+            let transferAmount = +$(this).val();
+            let fees = 10;
+            let feesAmount = (transferAmount * fees) / 100;
+            let transactionAmount = transferAmount + feesAmount;
+
+            page.dialogs.elements.transactionAmountTrf.val(transactionAmount);
+        });
+    };
+
+    page.commands.createCustomer = () => {
+        locationRegion.id = 0;
+        locationRegion.provinceId = page.dialogs.elements.provinceCre.val();
+        locationRegion.provinceName = page.dialogs.elements.provinceCre
+            .find("option:selected")
+            .text();
+        locationRegion.districtId = page.dialogs.elements.districtCre.val();
+        locationRegion.districtName = page.dialogs.elements.districtCre
+            .find("option:selected")
+            .text();
+        locationRegion.wardId = page.dialogs.elements.wardCre.val();
+        locationRegion.wardName = page.dialogs.elements.wardCre
+            .find("option:selected")
+            .text();
+        locationRegion.address = page.dialogs.elements.addressCre.val();
+
+        customer.id = 0;
+        customer.fullName = page.dialogs.elements.fullNameCre.val();
+        customer.email = page.dialogs.elements.emailCre.val();
+        customer.phone = page.dialogs.elements.phoneCre.val();
+        customer.balance = 0;
+        customer.locationRegion = locationRegion;
+
+
+        $.ajax({
+            headers: {
+                accept: "application/json",
+                "content-type": "application/json",
+            },
+            type: "POST",
+            url: page.urls.createCustomer,
+            data: JSON.stringify(customer),
+        })
+            .done((data) => {
+                customer = data;
+                locationRegion = customer.locationRegion;
+                page.elements.tbCustomer.prepend(
+                    App.renderRowCustomer(customer, locationRegion)
+                );
+                // page.elements.tbCustomer.prepend(App.renderRowCustomer(data));
+                page.commands.removeEventOpenModal();
+                page.commands.handleOpenModalUpdate();
+                page.commands.handleOpenModalDeposit();
+                page.commands.handleOpenModalWithdraw();
+                page.commands.handleOpenModalTransfer();
+                page.commands.handleDeleteCustomer();
+                page.commands.handleShowFooterButton();
+
+                page.commands.initTooltip();
+                page.elements.modalCreate.modal("hide");
+
+                App.SweetAlert.showAlertSuccess(App.AlertMessageVi.SUCCESS_CREATED);
+            })
+            .fail((jqXHR) => {
+                App.SweetAlert.showAlertError(App.AlertMessageVi.ERROR_400);
+            });
+    };
+
+
+    page.commands.updateCustomer = () => {
+        locationRegion.provinceId = page.dialogs.elements.provinceUp.val();
+        locationRegion.provinceName = page.dialogs.elements.provinceUp
+            .find("option:selected")
+            .text();
+        locationRegion.districtId = page.dialogs.elements.districtUp.val();
+        locationRegion.districtName = page.dialogs.elements.districtUp
+            .find("option:selected")
+            .text();
+        locationRegion.wardId = page.dialogs.elements.wardUp.val();
+        locationRegion.wardName = page.dialogs.elements.wardUp
+            .find("option:selected")
+            .text();
+        locationRegion.address = page.dialogs.elements.addressUp.val();
+
+        customer.locationRegion = locationRegion;
+        customer.fullName = page.dialogs.elements.fullNameUp.val();
+        customer.email = page.dialogs.elements.emailUp.val();
+        customer.phone = page.dialogs.elements.phoneUp.val();
+
+
+
+        $.ajax({
+            headers: {
+                accept: "application/json",
+                "content-type": "application/json",
+            },
+            type: "PUT",
+            url: page.urls.updateCustomer,
+            data: JSON.stringify(customer),
+        })
+            .done((data) => {
+                customer = data;
+                locationRegion = customer.locationRegion;
+                let currentRow = $("#tr_" + data.id);
+
+                currentRow.replaceWith(App.renderRowCustomer(data, data.locationRegion));
+
+
+                // page.elements.tbCustomer.prepend(App.renderRowCustomer(data));
+                page.commands.removeEventOpenModal();
+                page.commands.handleOpenModalUpdate();
+                page.commands.handleOpenModalDeposit();
+                page.commands.handleOpenModalWithdraw();
+                page.commands.handleOpenModalTransfer();
+                page.commands.handleDeleteCustomer();
+                page.commands.handleShowFooterButton();
+
+                page.commands.initTooltip();
+                page.elements.modalUpdate.modal("hide");
+
+                App.SweetAlert.showAlertSuccess(App.AlertMessageVi.SUCCESS_UPDATED);
+            })
+            .fail((jqXHR) => {
+                App.SweetAlert.showAlertError(App.AlertMessageVi.ERROR_400);
+            });
+    };
+
+
+
+    function doDeposit() {
+        deposit.customerId = $("#customerIdDep").val();
+        deposit.transactionAmount = $("#transactionAmountDep").val();
+
+        $.ajax({
+            headers: {
+                accept: "application/json",
+                "content-type": "application/json",
+            },
+            type: "POST",
+            url: page.urls.deposit,
+            data: JSON.stringify(deposit),
+        })
+            .done((data) => {
+                let currentRow = $("#tr_" + data.id);
+
+                currentRow.replaceWith(App.renderRowCustomer(data, data.locationRegion));
+
+                page.commands.handleShowFooterButton();
+                page.commands.removeEventOpenModal();
+                page.commands.handleOpenModalDeposit();
+                page.commands.handleOpenModalWithdraw();
+                page.commands.handleOpenModalTransfer();
+                page.commands.handleDeleteCustomer();
+
+                $("#modalDeposit").modal("hide");
+
+                App.SweetAlert.showAlertSuccess(
+                    App.AlertMessageVi.SUCCESS_DEPOSIT
+                );
+            })
+            .fail((jqXHR) => {
+                App.SweetAlert.showAlertError(App.AlertMessageVi.ERROR_400);
+            });
+    }
+
+    page.dialogs.commands.withdraw = () => {
+        withdraw.id = 0;
+        withdraw.customerId = page.dialogs.elements.customerIdWd.val();
+        withdraw.transactionAmount =
+            page.dialogs.elements.transactionAmountWd.val();
+
+        $.ajax({
+            headers: {
+                accept: "application/json",
+                "content-type": "application/json",
+            },
+            type: "POST",
+            url: page.urls.withdraw,
+            data: JSON.stringify(withdraw),
+        })
+            .done((data) => {
+                let currentRow = $("#tr_" + data.id);
+
+                currentRow.replaceWith(App.renderRowCustomer(data, data.locationRegion));
+
+                page.commands.handleShowFooterButton();
+                page.commands.handleOpenModalDeposit()
+                page.commands.removeEventOpenModal();
+                page.commands.handleOpenModalDeposit();
+                page.commands.handleOpenModalWithdraw();
+                page.commands.handleOpenModalTransfer();
+                page.commands.handleDeleteCustomer();
+
+                page.dialogs.elements.modalWithdraw.modal("hide");
+                App.SweetAlert.showAlertSuccess(
+                    App.AlertMessageVi.SUCCESS_WITHDRAW
+                );
+            })
+            .fail((jqXHR) => {
+                App.SweetAlert.showAlertError(App.AlertMessageVi.ERROR_400);
+            });
+    };
+
+    page.dialogs.commands.transfer = () => {
+        transfer.id = 0;
+        transfer.senderId = page.dialogs.elements.senderIdTrf.val();
+        transfer.recipientId = page.dialogs.elements.recipientIdTrf.val();
+        transfer.transferAmount = page.dialogs.elements.transferAmountTrf.val();
+
+        $.ajax({
+            headers: {
+                accept: "application/json",
+                "content-type": "application/json",
+            },
+            type: "POST",
+            url: page.urls.transfer,
+            data: JSON.stringify(transfer),
+        })
+            .done((data) => {
+                sender = data.sender;
+                recipient = data.recipient;
+
+                page.dialogs.elements.balanceTrf.val(sender.balance);
+
+                let senderCurrentRow = $("#tr_" + sender.id);
+                senderCurrentRow.replaceWith(App.renderRowCustomer(sender, sender.locationRegion));
+
+                let recipientCurrentRow = $("#tr_" + recipient.id);
+                recipientCurrentRow.replaceWith(App.renderRowCustomer(recipient, recipient.locationRegion));
+
+                page.commands.handleShowFooterButton();
+                page.commands.removeEventOpenModal();
+                page.commands.handleOpenModalDeposit();
+                page.commands.handleOpenModalWithdraw();
+                page.commands.handleOpenModalTransfer();
+                page.commands.handleDeleteCustomer();
+
+                // page.dialogs.elements.modalTransfer.modal("hide");
+                App.SweetAlert.showAlertSuccess(
+                    App.AlertMessageVi.SUCCESS_TRANSFER
+                );
+            })
+            .fail((jqXHR) => {
+                $("#modalTransfer .modal-body .modal-alert-danger").empty();
+
+                let str = "";
+
+                let message = jqXHR.responseJSON.message;
+
+                if (message) {
+                    str += `<label id="messageTrf-error" class="error" for="messageTrf">${message}</label>`;
+                } else {
+                    let errors = jqXHR.responseJSON;
+
+                    $.each(errors, (key, value) => {
+                        str += `<label id="${key}Trf-error" class="error" for="${key}Trf">${value}</label>`;
+                    });
+                }
+
+                $("#modalTransfer .modal-body .modal-alert-danger")
+                    .append(str)
+                    .removeClass("hide")
+                    .addClass("show");
+            });
+    };
+
+    page.commands.suspendedCustomer = (customerId) => {
+        $.ajax({
+            headers: {
+                accept: "application/json",
+                "content-type": "application/json",
+            },
+            type: "DELETE",
+            url: page.urls.delete + customerId,
+        })
+            .done(() => {
+                $("#tr_" + customerId).remove();
+                App.SweetAlert.showAlertSuccess(
+                    App.AlertMessageVi.SUCCESS_DEACTIVATE
+                );
+            })
+            .fail((jqXHR) => {
+                App.SweetAlert.showAlertError(App.AlertMessageVi.ERROR_400);
+            });
+    };
+
+    page.dialogs.elements.frmCreate.validate({
+        rules: {
+            fullNameCre: {
+                required: true,
+                minlength: 5,
+                maxlength: 35,
+            },
+        },
+        messages: {
+            fullNameCre: {
+                required: "Vui lòng nhập tên đầy đủ",
+                minlength: "Họ tên tối thiểu 5 ký tự",
+                maxlength: "Họ tên tối đa 35 ký tự",
+            },
+        },
+        submitHandler: function () {
+            page.commands.createCustomer();
+        },
+    });
+
+    page.dialogs.elements.frmUpdate.validate({
+        rules: {
+            fullNameUp: {
+                required: true,
+                minlength: 5,
+                maxlength: 35,
+            },
+        },
+        messages: {
+            fullNameUp: {
+                required: "Vui lòng nhập tên đầy đủ",
+                minlength: "Họ tên tối thiểu 5 ký tự",
+                maxlength: "Họ tên tối đa 35 ký tự",
+            },
+        },
+        submitHandler: function () {
+            page.commands.updateCustomer();
+        },
+    });
+
+    $("#frmDeposit").validate({
+        rules: {
+            transactionAmountDep: {
+                required: true,
+                min: 500,
+                max: 1000000,
+            },
+        },
+        messages: {
+            transactionAmountDep: {
+                required: "Vui lòng nhập số tiền giao dịch đầy đủ",
+                min: "Số tiền giao dịch tối thiểu là {0}",
+                max: "Số tiền giao dịch tối đa là {0}",
+            },
+        },
+        submitHandler: function () {
+            doDeposit();
+        },
+    });
+
+    page.dialogs.elements.frmWithdraw.validate({
+        rules: {
+            transactionAmountWd: {
+                required: true,
+                min: 500,
+                max: 1000000,
+            },
+        },
+        messages: {
+            transactionAmountWd: {
+                required: "Vui lòng nhập số tiền giao dịch đầy đủ",
+                min: "Số tiền giao dịch tối thiểu là {0}",
+                max: "Số tiền giao dịch tối đa là {0}",
+            },
+        },
+        errorLabelContainer: "#modalWithdraw .modal-alert-danger",
+        errorPlacement: function (error, element) {
+            error.appendTo("#modalWithdraw .modal-alert-danger");
+        },
+        showErrors: function (errorMap, errorList) {
+            if (this.numberOfInvalids() > 0) {
+                $("#modalWithdraw .modal-alert-danger")
+                    .removeClass("hide")
+                    .addClass("show");
+            } else {
+                $("#modalWithdraw .modal-alert-danger")
+                    .removeClass("show")
+                    .addClass("hide")
+                    .empty();
+                $("#frmWithdraw input.error").removeClass("error");
+            }
+            this.defaultShowErrors();
+        },
+        submitHandler: function () {
+            page.dialogs.commands.withdraw();
+        },
+    });
+
+    page.dialogs.elements.frmTransfer.validate({
+        onkeyup: function (element) {
+            $(element).valid();
+        },
+        onclick: false,
+        onfocusout: false,
+        rules: {
+            transferAmountTrf: {
+                required: true,
+                min: 500,
+                max: 1000000,
+            },
+        },
+        messages: {
+            transferAmountTrf: {
+                required: "Vui lòng nhập số tiền giao dịch đầy đủ",
+                min: "Số tiền giao dịch tối thiểu là {0}",
+                max: "Số tiền giao dịch tối đa là {0}",
+            },
+        },
+        errorLabelContainer: "#modalTransfer .modal-alert-danger",
+        errorPlacement: function (error, element) {
+            error.appendTo("#modalTransfer .modal-alert-danger");
+        },
+        showErrors: function (errorMap, errorList) {
+            if (this.numberOfInvalids() > 0) {
+                $("#modalTransfer .modal-alert-danger")
+                    .removeClass("hide")
+                    .addClass("show");
+            } else {
+                $("#modalTransfer .modal-alert-danger")
+                    .removeClass("show")
+                    .addClass("hide")
+                    .empty();
+                $("#frmTransfer input.error").removeClass("error");
+            }
+            this.defaultShowErrors();
+        },
+        submitHandler: function () {
+            page.dialogs.commands.transfer();
+        },
+    });
+
+    page.commands.initTooltip = () => {
+        const tooltipTriggerList = document.querySelectorAll(
+            '[data-bs-toggle="tooltip"]'
+        );
+        const tooltipList = [...tooltipTriggerList].map(
+            (tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl)
+        );
+    };
+
+    page.commands.handleShowFooterButton = () => {
+        $("#tbCustomer tbody tr").on("click", function () {
+            let customerId = $(this).attr("id").replace("tr_", "");
+
+            page.elements.currentRow.val(customerId);
+
+            $("#tbCustomer tbody tr td .select-tab")
+                .removeClass("selected")
+                .addClass("unselected");
+
+            $(this)
+                .find("td .select-tab")
+                .removeClass("unselected")
+                .addClass("selected");
+
+            page.elements.footer.empty();
+            page.elements.footer.append(App.renderFooterButton());
+
+            page.commands.handleDeleteCustomer();
+            page.commands.handleOpenModalTransfer();
+            page.commands.handleOpenModalWithdraw();
+            page.commands.handleOpenModalUpdate();
+            page.commands.handleOpenModalDeposit();
+        });
+    };
+
+    page.initializeEventControl = () => {
+        page.commands.handleCloseModalWithdraw();
+
+        page.commands.handleCloseModalTransfer();
+
+        page.commands.handleChangeTransferAmountTrf();
+    };
+
+    page.loadData = () => {
+        page.commands.getAllCustomers();
+
+        page.commands.getAllProvinces().then(() => {
+            let provinceId = page.dialogs.elements.provinceCre.val();
+
+            page.commands.getAllDistrictsByProvinceId(provinceId).then(() => {
+                let districtId = page.dialogs.elements.districtCre.val();
+
+                page.commands.getAllWardsByDistrictId(districtId);
+            });
+        });
+    };
+
+    $(() => {
+        page.loadData();
+
+        page.initializeEventControl();
+    });
+</script>
+</body>
+</html>

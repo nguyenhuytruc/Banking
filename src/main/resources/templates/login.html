@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>LOGIN PAGE</title>
+    <link rel="stylesheet" href="/assets/izitoast/v1.4.0/iziToast-1.4.0.min.css">
+    <th:block th:replace="layout/head"/>
+    <link rel="stylesheet" href="/assets/css/login.css">
+</head>
+<body>
+<!-- Pills navs -->
+
+<a href="https://front.codes/" class="logo" target="_blank">
+    <img src="https://assets.codepen.io/1462889/fcy.png" alt="">
+</a>
+
+<div class="section">
+    <div class="container">
+        <div class="row full-height justify-content-center">
+            <div class="col-12 text-center align-self-center py-5">
+                <div class="section pb-5 pt-5 pt-sm-2 text-center">
+                    <h6 class="mb-0 pb-3"><span>Log In </span><span>Sign Up</span></h6>
+                    <input class="checkbox" type="checkbox" id="reg-log" name="reg-log"/>
+                    <label for="reg-log"></label>
+                    <div class="card-3d-wrap mx-auto">
+                        <div class="card-3d-wrapper">
+                            <div class="card-front">
+                                <div class="center-wrap">
+                                    <div class="section text-center">
+                                        <h4 class="mb-4 pb-3">Log In</h4>
+                                        <div class="form-group">
+                                            <input type="email" name="emailLogin" class="form-style" placeholder="Your Email" id="emailLogin" autocomplete="off">
+                                            <i class="input-icon uil uil-at"></i>
+                                        </div>
+                                        <div class="form-group mt-2">
+                                            <input type="password" name="passwordLogin" class="form-style" placeholder="Your Password" id="passwordLogin" autocomplete="off">
+                                            <i class="input-icon uil uil-lock-alt"></i>
+                                        </div>
+                                        <button id="btnLogin" class="btn mt-4">Login</button>
+<!--                                        <a href="#" class="btn mt-4">submit</a>-->
+                                        <p class="mb-0 mt-4 text-center"><a href="#0" class="link">Forgot your password?</a></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-back">
+                                <div class="center-wrap">
+                                    <div class="section text-center">
+                                        <h4 class="mb-4 pb-3">Sign Up</h4>
+                                        <div class="form-group">
+                                            <input type="email" name="emailSingnup" class="form-style" placeholder="Your Email" id="emailSingnup" autocomplete="off">
+                                            <i class="input-icon uil uil-user"></i>
+                                        </div>
+                                        <div class="form-group mt-2">
+                                            <input type="password" name="passwordSignup" class="form-style" placeholder="Your Password" id="passwordSignup" autocomplete="off">
+                                            <i class="input-icon uil uil-at"></i>
+                                        </div>
+                                        <div class="form-group mt-2">
+                                            <input type="password" name="checkPasswordSignup" class="form-style" placeholder="Retype Password" id="checkPasswordSignup" autocomplete="off">
+                                            <i class="input-icon uil uil-lock-alt"></i>
+                                        </div>
+                                        <div class="form-group mt-2">
+                                            <label for="role">Role group</label>
+                                            <select name="role" id="role">
+                                                <option value="1">Admin role</option>
+                                                <option value="2">User role</option>
+                                                <option value="3">Moderator role</option>
+                                            </select>
+                                        </div>
+                                        <button id="btnSingup" class="btn mt-4">Register</button>
+<!--                                        <a href="#" class="btn mt-4">submit</a>-->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/assets/jquery/jquery-v3.6.0.min.js"></script>
+<script src="/assets/izitoast/v1.4.0/iziToast-1.4.0.js"></script>
+
+<script src="/assets/js/app.js"></script>
+
+<script>
+    const page = {
+        urls: {
+            login: App.BASE_URL_AUTH + "/login",
+            register: App.BASE_URL_AUTH + "/register"
+        },
+        elements: {},
+        commands: {},
+        initializeEventControl: {}
+    }
+
+    page.elements.emailLogin = $("#emailLogin");
+    page.elements.passwordLogin = $("#passwordLogin");
+    page.elements.btnLogin = $("#btnLogin");
+
+    page.elements.emailSingnup = $("#emailSingnup");
+    page.elements.passwordSignup = $("#passwordSignup");
+    page.elements.checkPasswordSignup = $("#checkPasswordSignup");
+    page.elements.role = $("#role");
+    page.elements.btnSingup = $("#btnSingup");
+
+    page.commands.register = () => {
+
+        let user = {
+            "username": page.elements.emailSingnup.val(),
+            "password": page.elements.passwordSignup.val(),
+            "role": {
+                "id": page.elements.role.val()
+            }
+        }
+
+        if((page.elements.passwordSignup.val()) == ((page.elements.checkPasswordSignup.val()))){
+            $.ajax({
+                headers: {
+                    "accept": "application/json",
+                    "content-type": "application/json"
+                },
+                type: "POST",
+                url: page.urls.register,
+                data: JSON.stringify(user)
+            })
+                .done(() => {
+                    App.IziToast.showSuccessAlert("Register Successful!");
+                })
+                .fail(() => {
+                    App.IziToast.showErrorAlert("Error!")
+                })
+        } else {
+            App.IziToast.showErrorAlert("Error! Check password ")
+        }
+
+    }
+
+    page.commands.login = () => {
+        let user = {
+            "username": page.elements.emailLogin.val(),
+            "password": page.elements.passwordLogin.val()
+        }
+
+        $.ajax({
+            headers: {
+                "accept": "application/json",
+                "content-type": "application/json"
+            },
+            type: "POST",
+            url: page.urls.login,
+            data: JSON.stringify(user)
+        })
+        .done(() => {
+            App.IziToast.showSuccessAlert("Login Success");
+
+            setTimeout(() => {
+                window.location.href = "/customers";
+            }, 1500)
+        })
+        .fail(() => {
+            App.IziToast.showErrorAlert("Login fail");
+        })
+    }
+
+    page.initializeEventControl = () => {
+
+        page.elements.btnSingup.on("click", () => {
+            page.commands.register();
+
+        })
+
+        page.elements.btnLogin.on("click", () => {
+            page.commands.login();
+        })
+    }
+
+    $(() => {
+        page.initializeEventControl();
+    })
+
+</script>
+</body>
+</html>

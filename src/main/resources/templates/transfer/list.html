@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <title>Transfer History</title>
+    <th:block th:replace="layout/head"/>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="row">
+                <div class="col-sm-5">
+                    <h1>Transfer History</h1>
+                </div>
+                <div class="col-sm-7">
+                    <a href="/customers">
+                        <button class="btn btn-outline-light">
+                            <i class="fas fa-list"></i>
+                            <span>List of customers</span>
+                        </button>
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <div class="content">
+            <table id="tbTransfer" class="table table-hover">
+                <thead>
+                    <tr>
+                        <th class="text-center">#</th>
+                        <th class="text-center">Created At</th>
+                        <th class="text-center">Sender ID</th>
+                        <th class="text-center">Sender Name</th>
+                        <th class="text-center">Recipient ID</th>
+                        <th class="text-center">Recipient Name</th>
+                        <th class="text-center">Transfer Amount ($)</th>
+                        <th class="text-center">Fees (%)</th>
+                        <th class="text-center">Fees Amount ($)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="8">Total Fees Amount:</td>
+                        <td id="summFeesAmount"></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="/assets/jquery/jquery-v3.6.0.min.js"></script>
+    <script type="text/javascript" src="/assets/jquery/jquery.validate-v1.19.5.min.js"></script>
+    <script type="text/javascript" src="/assets/sweetalert/v2/sweetalert2.js"></script>
+    <script type="text/javascript" src="/assets/bootstrap/v5.2.2/js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript" src="/assets/js/popper-v1.16.0.min.js"></script>
+
+    <!-- <script type="text/javascript" src="../assets/js/moment-v2.29.4.min.js"></script> -->
+    <script type="text/javascript" src="/assets/js/moment-with-locales.min.js"></script>
+
+
+    <script src="/assets/js/app.js"></script>
+
+
+    <script>
+
+        moment.locale('vi');
+
+        // moment().format('L'); 
+
+        function getAllTransferHistory() {
+            $.ajax({
+                "headers": {
+                    "accept": "application/json",
+                    "content-type": "application/json"
+                },
+                type: "GET",
+                url: "http://localhost:8080/api/transfers/get-all-histories"
+            })
+            .done((data) => {
+                data.map(item => {
+                    $("#tbTransfer tbody").append(App.renderRowTransferHistory(item));
+                })
+            })
+            .fail((jqXHR) => {
+                alert("Get all transfer histories error");
+            })
+        }
+
+        function getSumFeesAmount() {
+            $.ajax({
+                "headers": {
+                    "accept": "application/json",
+                    "content-type": "application/json"
+                },
+                type: "GET",
+                url: "http://localhost:8080/api/transfers/get-sum-fees-amount"
+            })
+            .done((data) => {
+                $("#summFeesAmount").html(data);
+            })
+            .fail((jqXHR) => {
+                alert("Get all transfer histories error");
+            })
+        }
+
+        function getAllTransferHistoryWithSumFeesAmount() {
+            $.ajax({
+                "headers": {
+                    "accept": "application/json",
+                    "content-type": "application/json"
+                },
+                type: "GET",
+                url: "http://localhost:8080/api/transfers/get-all-histories-with-sum-fees-amount"
+            })
+            .done((data) => {
+                let transferHistories = data.transferHistories;
+                let sumFeesAmount = data.sumFeesAmount;
+                
+                transferHistories.map(item => {
+                    item.createdAt = moment(item.createdAt).format('L');
+                    $("#tbTransfer tbody").append(App.renderRowTransferHistory(item));
+                })
+
+                $("#summFeesAmount").html(sumFeesAmount);
+            })
+            .fail((jqXHR) => {
+                alert("Get all transfer histories error");
+            })
+        }
+
+        // getAllTransferHistory();
+        // getSumFeesAmount();
+
+        getAllTransferHistoryWithSumFeesAmount();
+
+
+        
+    </script>
+</body>
+</html>
